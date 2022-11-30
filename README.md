@@ -15,7 +15,7 @@
 
 ## Installation
 
-- Install dependencies `composer require thecoati/socialite-fivem-provider`.
+- Install dependencies `composer require thecoati/socialite-cfx-provider`.
 - Generate RSA public and private key `php artisan cfx:keys`.
 - Add the following lines to your `.env`:
 ```dotenv
