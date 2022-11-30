@@ -1,0 +1,46 @@
+{
+    "name": "thecoati/socialite-cfx-provider",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "cfx",
+        "cfx.re",
+        "fivem",
+        "redm",
+        "oauth",
+        "socialite",
+        "laravel"
+    ],
+    "readme": "README.md",
+    "autoload": {
+        "psr-4": {
+            "TheCoati\\CfxSocialite\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "TheCoati",
+            "role": "Maintainer"
+        }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/KSchreuder/"
+        }
+    ],
+    "require": {
+        "php": "^8.0.2",
+        "laravel/socialite": "^5.5",
+        "phpseclib/phpseclib": "^3.0",
+        "ext-json": "*",
+        "ext-openssl": "*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TheCoati\\CfxSocialite\\CfxServiceProvider"
+            ]
+        }
+    }
+}
