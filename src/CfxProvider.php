@@ -73,7 +73,7 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getCodeFields($state = null): array
     {
-        $scopes = array_merge(["session_info"], $this->getScopes());
+        $scopes = array_merge(["read"], $this->getScopes());
 
         return [
             "auth_redirect" => $this->redirectUrl,
