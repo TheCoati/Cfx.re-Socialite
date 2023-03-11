@@ -236,7 +236,7 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
     {
         $baseUrl = self::$BASE_URL;
 
-        return $baseUrl . str_replace('{size}', '128', $user['avatar_template']);
+        return $baseUrl . str_replace('{size}', config('cfx.avatar_size'), $user['avatar_template']);
     }
 
     /**
