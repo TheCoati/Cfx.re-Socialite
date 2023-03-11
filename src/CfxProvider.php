@@ -169,8 +169,6 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
 
         return [
             'access_token' => $code,
-            'refresh_token' =>  '',
-            'expires_in' => '',
         ];
     }
 
