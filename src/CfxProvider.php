@@ -193,10 +193,10 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
      * Gets the user information from the session endpoint.
      *
      * @param $token
-     * @return array|mixed
+     * @return array
      * @throws GuzzleException
      */
-    protected function getUserByToken($token)
+    protected function getCurrentUser($token): array
     {
         $baseUrl = self::$BASE_URL;
 
@@ -205,6 +205,25 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
         ]);
 
         return json_decode($response->getBody(), true);
+    }
+
+    /**
+     * Gets the user information from the users endpoint.
+     *
+     * @param $token
+     * @return array|mixed
+     * @throws GuzzleException
+     */
+    protected function getUserByToken($token): mixed
+    {
+        $baseUrl = self::$BASE_URL;
+        $username = $this->getCurrentUser($token)['username'];
+
+        $response = $this->getHttpClient()->get("$baseUrl/users/$username.json", [
+            RequestOptions::HEADERS => $this->getTokenHeaders($token)
+        ]);
+
+        return json_decode($response->getBody(), true)['user'];
     }
 
     /**
@@ -220,6 +239,7 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
         return (new User())->setRaw($user)->map([
             'id' => $user['id'],
             'nickname' => $user['username'],
+            'email' => $user['email'],
             'avatar' => 'https://avatars.discourse-cdn.com/v4/letter/s/49beb7/128.png',
         ]);
     }
