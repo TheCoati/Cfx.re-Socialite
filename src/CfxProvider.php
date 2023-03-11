@@ -204,7 +204,7 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
             RequestOptions::HEADERS => $this->getTokenHeaders($token),
         ]);
 
-        return json_decode($response->getBody(), true);
+        return json_decode($response->getBody(), true)['current_user'];
     }
 
     /**
@@ -247,8 +247,6 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
      */
     protected function mapUserToObject(array $user): User
     {
-        $user = $user['current_user'];
-
         return (new User())->setRaw($user)->map([
             'id' => $user['id'],
             'nickname' => $user['username'],
