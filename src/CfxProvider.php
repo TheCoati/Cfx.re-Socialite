@@ -227,6 +227,19 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
+     * Format the avatar_template field to create a correct link
+     *
+     * @param array $user
+     * @return string
+     */
+    protected function formatAvatar(array $user): string
+    {
+        $baseUrl = self::$BASE_URL;
+
+        return $baseUrl . str_replace('{size}', '128', $user['avatar_template']);
+    }
+
+    /**
      * Map the returned data to a socialite user object.
      *
      * @param array $user
@@ -240,7 +253,7 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
             'id' => $user['id'],
             'nickname' => $user['username'],
             'email' => $user['email'],
-            'avatar' => 'https://avatars.discourse-cdn.com/v4/letter/s/49beb7/128.png',
+            'avatar' => $this->formatAvatar($user),
         ]);
     }
 }
