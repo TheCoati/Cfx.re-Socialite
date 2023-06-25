@@ -5,4 +5,5 @@ return [
     'client_id' => env('CFX_CLIENT_ID', base64_encode(env('APP_NAME'))),
     'client_secret' => null, /* Unused, required by Socialite */
     'redirect' => env('CFX_REDIRECT_URL'),
+    'avatar_size' => env('CFX_AVATAR_SIZE', 128),
 ];

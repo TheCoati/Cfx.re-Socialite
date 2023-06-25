@@ -73,7 +73,7 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getCodeFields($state = null): array
     {
-        $scopes = array_merge(["session_info"], $this->getScopes());
+        $scopes = array_merge(["read"], $this->getScopes());
 
         return [
             "auth_redirect" => $this->redirectUrl,
@@ -169,8 +169,6 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
 
         return [
             'access_token' => $code,
-            'refresh_token' =>  '',
-            'expires_in' => '',
         ];
     }
 
@@ -193,10 +191,10 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
      * Gets the user information from the session endpoint.
      *
      * @param $token
-     * @return array|mixed
+     * @return array
      * @throws GuzzleException
      */
-    protected function getUserByToken($token)
+    protected function getCurrentUser($token): array
     {
         $baseUrl = self::$BASE_URL;
 
@@ -204,7 +202,39 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
             RequestOptions::HEADERS => $this->getTokenHeaders($token),
         ]);
 
-        return json_decode($response->getBody(), true);
+        return json_decode($response->getBody(), true)['current_user'];
+    }
+
+    /**
+     * Gets the user information from the users endpoint.
+     *
+     * @param $token
+     * @return array|mixed
+     * @throws GuzzleException
+     */
+    protected function getUserByToken($token): mixed
+    {
+        $baseUrl = self::$BASE_URL;
+        $username = $this->getCurrentUser($token)['username'];
+
+        $response = $this->getHttpClient()->get("$baseUrl/users/$username.json", [
+            RequestOptions::HEADERS => $this->getTokenHeaders($token)
+        ]);
+
+        return json_decode($response->getBody(), true)['user'];
+    }
+
+    /**
+     * Format the avatar_template field to create a correct link
+     *
+     * @param array $user
+     * @return string
+     */
+    protected function formatAvatar(array $user): string
+    {
+        $baseUrl = self::$BASE_URL;
+
+        return $baseUrl . str_replace('{size}', config('cfx.avatar_size'), $user['avatar_template']);
     }
 
     /**
@@ -215,12 +245,11 @@ class CfxProvider extends AbstractProvider implements ProviderInterface
      */
     protected function mapUserToObject(array $user): User
     {
-        $user = $user['current_user'];
-
         return (new User())->setRaw($user)->map([
             'id' => $user['id'],
             'nickname' => $user['username'],
-            'avatar' => 'https://avatars.discourse-cdn.com/v4/letter/s/49beb7/128.png',
+            'email' => $user['email'],
+            'avatar' => $this->formatAvatar($user),
         ]);
     }
 }

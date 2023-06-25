@@ -33,6 +33,10 @@ class CfxServiceProvider extends ServiceProvider
             ]);
         }
 
+        $this->publishes([
+            __DIR__.'/../config/cfx.php' => config_path('cfx.php')
+        ], 'cfx-config');
+
         $socialite = $this->app->make(Factory::class);
 
         $socialite->extend('cfx', function ($app) use ($socialite) {
